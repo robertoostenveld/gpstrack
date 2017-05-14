@@ -1,0 +1,104 @@
+<html>
+<head>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4ZZ7VrwQQ3VyRXci6FmK-ncFBulVpNF4"></script>
+</head>
+
+<body>
+  <h1>Location</h1>
+  <div id="map" style="width:600px;height:250px;"></div>
+  <h1>Battery</h1>
+  <div id="graph1" style="width:600px;height:150px;"></div>
+  <h1>Temperature</h1>
+  <div id="graph2" style="width:600px;height:150px;"></div>
+  <h1>Satellites</h1>
+  <div id="graph3" style="width:600px;height:150px;"></div>
+  <h1>Time to fix</h1>
+  <div id="graph4" style="width:600px;height:150px;"></div>
+</body>
+
+<script>
+
+var battery = [];
+var course = [];
+var latitude = [];
+var longitude = [];
+var satellites = [];
+var speed = [];
+var temperature = [];
+var time = [];
+var time_to_fix = [];
+
+$(document).ready(function() {
+  $.ajax({
+    url: '/query',
+    type: 'GET',
+    dataType: 'json',
+    success: function(data) {
+      // alert('ok'); 
+      for (i = 0; i < data.length; i++) {
+        battery[i]     = data[i].battery;
+        latitude[i]    = data[i].latitude/10000000;
+        longitude[i]   = data[i].longitude/10000000;
+        satellites[i]  = data[i].satellites;
+        temperature[i] = data[i].temperature;
+        time[i]        = data[i].time;
+        time_to_fix[i] = data[i].time_to_fix;
+      };
+
+      map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 10,
+        center: new google.maps.LatLng(51.83,5.85),
+        mapTypeId: 'terrain'
+      });
+
+      // Loop through the results array and place a marker for each coordinate
+        for (var i = 0; i < latitude.length; i++) {
+          var latLng = new google.maps.LatLng(latitude[i],longitude[i]);
+          var marker = new google.maps.Marker({
+            position: latLng,
+            map: map
+          });
+        }
+
+      GRAPH1 = document.getElementById('graph1');
+      GRAPH2 = document.getElementById('graph2');
+      GRAPH3 = document.getElementById('graph3');
+      GRAPH4 = document.getElementById('graph4');
+
+      Plotly.plot( GRAPH1, [{
+      x: time,
+      y: battery }], {
+      margin: { t: 0 } } );
+
+      Plotly.plot( GRAPH2, [{
+      x: time,
+      y: temperature }], {
+      margin: { t: 0 } } );
+
+      Plotly.plot( GRAPH3, [{
+      x: time,
+      y: satellites }], {
+      margin: { t: 0 } } );
+
+      Plotly.plot( GRAPH4, [{
+      x: time,
+      y: time_to_fix }], {
+      margin: { t: 0 } } );
+
+    },
+    error: function() { alert('error!'); },
+    beforeSend: function(xhr) {
+      xhr.setRequestHeader('Accept', 'application/json');
+      xhr.setRequestHeader('Authorization', 'key ttn-account-v2.6RmpElDBLS9i200KiH2e_2JaoUKisbSPaatGpzWN45w');
+    }
+  });
+});
+
+
+
+</script>
+
+</html>
+
