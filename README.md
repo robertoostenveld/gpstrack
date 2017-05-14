@@ -2,7 +2,7 @@
 
 This is a front-end application for a LoRaWAN GPS tracker. 
 
-The GPS location, battery voltage and temperature are measured by a (Sodaq One)[http://sodaq.com/] and send to (The Things Network)[http://thethingsnetwork.org/]. The Sodaq is running the universal tracker (firmware)[https://github.com/SodaqMoja/SodaqOne-UniversalTracker-v2].
+The GPS location, battery voltage and temperature are measured by a [Sodaq One](http://sodaq.com/) and send to [The Things Network](http://thethingsnetwork.org/). The Sodaq is running the universal tracker [firmware](https://github.com/SodaqMoja/SodaqOne-UniversalTracker-v2).
 
 The data is converted on the TTN backend using the following converter
 ```
